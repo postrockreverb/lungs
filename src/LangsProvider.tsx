@@ -7,24 +7,28 @@ import { LS_CACHE_KEY } from './constants';
 interface LangProviderProps {
   children: ReactNode;
   langPack: LangPack | undefined | null;
-  localStorageCache: boolean;
+  localStorageCache?: boolean;
 }
 
 export const LangsProvider = ({ children, langPack: _langPack, localStorageCache = true }: LangProviderProps) => {
   const [langPack, setLangPack] = useState<LangPack | undefined | null>(_langPack);
 
   useEffect(() => {
-    if (typeof langPack === 'object') {
+    if (langPack && typeof langPack === 'object') {
       localStorage.setItem(LS_CACHE_KEY, JSON.stringify(langPack));
     }
 
     if (!langPack && localStorageCache) {
-      const langPack = JSON.parse(localStorage.getItem(LS_CACHE_KEY) ?? '');
-      if (typeof langPack === 'object') {
-        setLangPack(langPack);
+      const langPackParsed = JSON.parse(localStorage.getItem(LS_CACHE_KEY) ?? '');
+      if (langPackParsed && typeof langPackParsed === 'object') {
+        setLangPack(langPackParsed);
       }
     }
-  }, [langPack, localStorageCache]);
+
+    if (_langPack) {
+      setLangPack(langPack);
+    }
+  }, [_langPack, langPack, localStorageCache]);
 
   const getLang: GetLang = (key, vars, count): string => {
     const translation = langPack?.commons?.[key];
