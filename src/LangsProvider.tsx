@@ -14,12 +14,15 @@ export const LangsProvider = ({ children, langPack: _langPack, localStorageCache
   const [langPack, setLangPack] = useState<LangPack | undefined | null>(_langPack);
 
   useEffect(() => {
-    if (langPack) {
+    if (typeof langPack === 'object') {
       localStorage.setItem(LS_CACHE_KEY, JSON.stringify(langPack));
     }
 
     if (!langPack && localStorageCache) {
-      setLangPack(JSON.parse(localStorage.getItem(LS_CACHE_KEY) ?? ''));
+      const langPack = JSON.parse(localStorage.getItem(LS_CACHE_KEY) ?? '');
+      if (typeof langPack === 'object') {
+        setLangPack(langPack);
+      }
     }
   }, [langPack, localStorageCache]);
 
