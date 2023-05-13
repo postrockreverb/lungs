@@ -8,12 +8,15 @@ interface LangProviderProps {
   children: ReactNode;
   langPack: LangPack | undefined | null;
   localStorageCache?: boolean;
+  onNeedLoad?: () => void;
 }
 
-export const LangsProvider = ({ children, langPack: _langPack, localStorageCache = true }: LangProviderProps) => {
+export const LangsProvider = ({ children, langPack: _langPack, localStorageCache = true, onNeedLoad }: LangProviderProps) => {
   const [langPack, setLangPack] = useState<LangPack | undefined | null>(_langPack);
 
   useEffect(() => {
+    let hasLangPack = Boolean(_langPack || langPack);
+
     if (_langPack && typeof _langPack === 'object') {
       setLangPack(_langPack);
       if (localStorageCache) {
@@ -26,7 +29,12 @@ export const LangsProvider = ({ children, langPack: _langPack, localStorageCache
       const langPackParsed = JSON.parse(json);
       if (langPackParsed && typeof langPackParsed === 'object') {
         setLangPack(langPackParsed);
+        hasLangPack = true;
       }
+    }
+
+    if (!hasLangPack) {
+      onNeedLoad?.();
     }
   }, [_langPack, langPack, localStorageCache]);
 
