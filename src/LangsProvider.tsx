@@ -14,20 +14,19 @@ export const LangsProvider = ({ children, langPack: _langPack, localStorageCache
   const [langPack, setLangPack] = useState<LangPack | undefined | null>(_langPack);
 
   useEffect(() => {
-    if (langPack && typeof langPack === 'object') {
-      localStorage.setItem(LS_CACHE_KEY, JSON.stringify(langPack));
+    if (_langPack && typeof _langPack === 'object') {
+      setLangPack(_langPack);
+      if (localStorageCache) {
+        localStorage.setItem(LS_CACHE_KEY, JSON.stringify(_langPack));
+      }
     }
 
-    if (!langPack && localStorageCache && !!localStorage.getItem(LS_CACHE_KEY)) {
+    if (localStorageCache && !_langPack && !langPack && !!localStorage.getItem(LS_CACHE_KEY)) {
       const json = localStorage.getItem(LS_CACHE_KEY) ?? '';
       const langPackParsed = JSON.parse(json);
       if (langPackParsed && typeof langPackParsed === 'object') {
         setLangPack(langPackParsed);
       }
-    }
-
-    if (_langPack) {
-      setLangPack(langPack);
     }
   }, [_langPack, langPack, localStorageCache]);
 
