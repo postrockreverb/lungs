@@ -55,7 +55,7 @@ declare const useLangs: () => LangsContextValue;
 interface LangProviderProps {
     children: ReactNode;
     langPack: LangPack | undefined | null;
-    localStorageCache: boolean;
+    localStorageCache?: boolean;
 }
 declare const LangsProvider: ({ children, langPack: _langPack, localStorageCache }: LangProviderProps) => react_jsx_runtime.JSX.Element;
 
