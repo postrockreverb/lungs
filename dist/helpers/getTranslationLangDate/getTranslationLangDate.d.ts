@@ -1,2 +1,2 @@
 import { DateLangKeyTranslation, MonthLangKeyTranslation, RelativeDateLangKeyTranslation } from '../../types';
-export declare const getTranslationLangDate: (unixtime: number, dateLangKeyTranslation: DateLangKeyTranslation, monthsLangKeyTranslation: MonthLangKeyTranslation, relativeDateFromDay?: number, relativeDateLangKeyTranslation?: RelativeDateLangKeyTranslation) => string;
+export declare const getTranslationLangDate: (unixtime: number, dateLangKeyTranslation: DateLangKeyTranslation | undefined, monthsLangKeyTranslation: MonthLangKeyTranslation | undefined, relativeDateFromDay?: number, relativeDateLangKeyTranslation?: RelativeDateLangKeyTranslation | undefined) => string;

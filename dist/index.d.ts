@@ -54,7 +54,7 @@ declare const useLangs: () => LangsContextValue;
 
 interface LangProviderProps {
     children: ReactNode;
-    langPack: LangPack;
+    langPack: LangPack | undefined | null;
 }
 declare const LangsProvider: ({ children, langPack }: LangProviderProps) => react_jsx_runtime.JSX.Element;
 
