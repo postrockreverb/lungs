@@ -1,6 +1,6 @@
 {
   "name": "yermak-langs",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Langs library",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

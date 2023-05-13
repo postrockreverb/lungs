@@ -18,13 +18,11 @@ export const LangsProvider = ({ children, langPack: _langPack, localStorageCache
       localStorage.setItem(LS_CACHE_KEY, JSON.stringify(langPack));
     }
 
-    if (!langPack && localStorageCache) {
+    if (!langPack && localStorageCache && !!localStorage.getItem(LS_CACHE_KEY)) {
       const json = localStorage.getItem(LS_CACHE_KEY) ?? '';
-      if (json) {
-        const langPackParsed = JSON.parse(json);
-        if (langPackParsed && typeof langPackParsed === 'object') {
-          setLangPack(langPackParsed);
-        }
+      const langPackParsed = JSON.parse(json);
+      if (langPackParsed && typeof langPackParsed === 'object') {
+        setLangPack(langPackParsed);
       }
     }
 
