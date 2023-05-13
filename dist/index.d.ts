@@ -55,7 +55,8 @@ declare const useLangs: () => LangsContextValue;
 interface LangProviderProps {
     children: ReactNode;
     langPack: LangPack | undefined | null;
+    localStorageCache: boolean;
 }
-declare const LangsProvider: ({ children, langPack }: LangProviderProps) => react_jsx_runtime.JSX.Element;
+declare const LangsProvider: ({ children, langPack: _langPack, localStorageCache }: LangProviderProps) => react_jsx_runtime.JSX.Element;
 
 export { DateLangKeyTranslation, Lang, LangKey, LangKeyTranslation, LangPack, LangPackPartial, LangsProvider, MonthKey, MonthLangKeyTranslation, NumericKey, NumericLangKeyTranslation, RelativeDateKey, RelativeDateLangKeyTranslation, monthKeys, useDate, useLangs };
