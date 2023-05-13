@@ -5,14 +5,20 @@ import { toAbsoluteDate } from './toAbsoluteDate';
 
 export const getTranslationLangDate = (
   unixtime: number,
-  dateLangKeyTranslation: DateLangKeyTranslation,
-  monthsLangKeyTranslation: MonthLangKeyTranslation,
+  dateLangKeyTranslation: DateLangKeyTranslation | undefined,
+  monthsLangKeyTranslation: MonthLangKeyTranslation | undefined,
   relativeDateFromDay?: number,
-  relativeDateLangKeyTranslation?: RelativeDateLangKeyTranslation,
+  relativeDateLangKeyTranslation?: RelativeDateLangKeyTranslation | undefined,
 ) => {
   const delta = Math.round((+new Date() - unixtime) / 1000);
-  if (relativeDateLangKeyTranslation && relativeDateFromDay && delta < DAY * relativeDateFromDay) {
+  if (relativeDateFromDay && delta < DAY * relativeDateFromDay) {
+    if (!relativeDateLangKeyTranslation) {
+      return '';
+    }
     return toRelativeDate(unixtime, relativeDateLangKeyTranslation);
+  }
+  if (!dateLangKeyTranslation || !monthsLangKeyTranslation) {
+    return '';
   }
   return toAbsoluteDate(unixtime, dateLangKeyTranslation, monthsLangKeyTranslation);
 };

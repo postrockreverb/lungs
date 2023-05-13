@@ -1,7 +1,11 @@
 import { processVars } from './processVars';
 import { LangKeyTranslation, NumericKey } from '../../types';
 
-export const getTranslationLang = (translation: LangKeyTranslation, vars?: Record<string, string | number>, count?: number): string => {
+export const getTranslationLang = (
+  translation: LangKeyTranslation | undefined = '',
+  vars?: Record<string, string | number>,
+  count?: number,
+): string => {
   if (typeof translation !== 'object') {
     return processVars(translation, vars);
   }
