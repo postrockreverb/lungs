@@ -1,14 +1,28 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { LangPack } from './types';
 import { GetLang, GetLangDate, LangsContext, LangsContextValue } from './LangsContext';
 import { getTranslationLang, getTranslationLangDate } from './helpers';
+import { LS_CACHE_KEY } from './constants';
 
 interface LangProviderProps {
   children: ReactNode;
   langPack: LangPack | undefined | null;
+  localStorageCache: boolean;
 }
 
-export const LangsProvider = ({ children, langPack }: LangProviderProps) => {
+export const LangsProvider = ({ children, langPack: _langPack, localStorageCache = true }: LangProviderProps) => {
+  const [langPack, setLangPack] = useState<LangPack | undefined | null>(_langPack);
+
+  useEffect(() => {
+    if (langPack) {
+      localStorage.setItem(LS_CACHE_KEY, JSON.stringify(langPack));
+    }
+
+    if (!langPack && localStorageCache) {
+      setLangPack(JSON.parse(localStorage.getItem(LS_CACHE_KEY) ?? ''));
+    }
+  }, [langPack, localStorageCache]);
+
   const getLang: GetLang = (key, vars, count): string => {
     const translation = langPack?.commons?.[key];
     return getTranslationLang(translation, vars, count);
