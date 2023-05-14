@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { ReactNode } from 'react';
 
@@ -39,22 +38,21 @@ interface UseDateParams {
     relativeFromDay?: number;
     relativeLangKey?: LangKey;
 }
-declare const useDate: (props: UseDateParams) => string;
-
-type GetLang = (key: LangKey, vars?: Record<string, string | number>, count?: number) => string;
-type GetLangDate = (unixtime: number, dateLangKey: LangKey, monthsLangKey: LangKey, relativeFromDay?: number, relativeLangKey?: LangKey) => string;
-interface LangsContextValue {
-    getLang: GetLang;
-    getLangDate: GetLangDate;
-}
-
-declare const useLangs: () => LangsContextValue;
+declare const useClientDate: (props: UseDateParams) => string;
 
 interface LangProviderProps {
     children: ReactNode;
-    hash: string;
-    getLangPack: () => LangPack | null;
+    targetHash?: string;
+    onNeedLoad?: () => void;
 }
-declare const LangsProvider: (props: LangProviderProps) => react_jsx_runtime.JSX.Element;
+declare const LangsProvider: ({ children, targetHash, onNeedLoad }: LangProviderProps) => react_jsx_runtime.JSX.Element;
 
-export { DateLangKeyTranslation, Lang, LangKey, LangKeyTranslation, LangPack, LangsProvider, MonthKey, MonthLangKeyTranslation, NumericKey, NumericLangKeyTranslation, RelativeDateKey, RelativeDateLangKeyTranslation, monthKeys, useDate, useLangs };
+declare const setTargetLangPackHash: (hash: string) => void;
+declare const getLangPack: () => LangPack | null;
+declare const setLangPack: (newLangPack: LangPack | null) => void;
+declare const initLangPack: (onNeedLoad?: () => void) => void;
+
+declare const getLang: (key: LangKey, vars?: Record<string, string | number>, count?: number) => string;
+declare const getLangDate: (unixtime: number, dateLangKey: LangKey, monthsLangKey: LangKey, relativeFromDay?: number, relativeLangKey?: LangKey) => string;
+
+export { DateLangKeyTranslation, Lang, LangKey, LangKeyTranslation, LangPack, LangsProvider, MonthKey, MonthLangKeyTranslation, NumericKey, NumericLangKeyTranslation, RelativeDateKey, RelativeDateLangKeyTranslation, getLang, getLangDate, getLangPack, initLangPack, monthKeys, setLangPack, setTargetLangPackHash, useClientDate };

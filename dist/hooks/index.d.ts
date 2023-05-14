@@ -1,2 +1,1 @@
-export * from './useDate';
-export * from './useLangs';
+export * from './useClientDate';

@@ -6,5 +6,5 @@ interface UseDateParams {
     relativeFromDay?: number;
     relativeLangKey?: LangKey;
 }
-export declare const useDate: (props: UseDateParams) => string;
+export declare const useClientDate: (props: UseDateParams) => string;
 export {};

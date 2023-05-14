@@ -1,9 +1,8 @@
 import { ReactNode } from 'react';
-import { LangPack } from './types';
 interface LangProviderProps {
     children: ReactNode;
-    hash: string;
-    getLangPack: () => LangPack | null;
+    targetHash?: string;
+    onNeedLoad?: () => void;
 }
-export declare const LangsProvider: (props: LangProviderProps) => import("react/jsx-runtime").JSX.Element;
+export declare const LangsProvider: ({ children, targetHash, onNeedLoad }: LangProviderProps) => import("react/jsx-runtime").JSX.Element;
 export {};
