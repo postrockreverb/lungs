@@ -11,25 +11,17 @@ export const toRelativeDate = (unixtime: number, relativeDateLangKeyTranslation:
   }
 
   if (delta < MINUTE) {
-    return getTranslationLang(translation['seconds'], { n: delta }, delta);
-  }
-
-  if (delta < 2 * MINUTE) {
-    return getTranslationLang(translation['minute']);
+    return getTranslationLang(translation['seconds'], { seconds: delta }, delta);
   }
 
   if (delta < HOUR) {
     const minutes = Math.floor(delta / MINUTE);
-    return getTranslationLang(translation['minutes'], { n: minutes }, minutes);
-  }
-
-  if (Math.floor(delta / HOUR) === 1) {
-    return getTranslationLang(translation['hour']);
+    return getTranslationLang(translation['minutes'], { minutes: minutes }, minutes);
   }
 
   if (delta < DAY) {
     const hours = Math.floor(delta / HOUR);
-    return getTranslationLang(translation['hours'], { n: hours }, hours);
+    return getTranslationLang(translation['hours'], { hours: hours }, hours);
   }
 
   if (delta < DAY * 2) {
@@ -37,5 +29,5 @@ export const toRelativeDate = (unixtime: number, relativeDateLangKeyTranslation:
   }
 
   const days = Math.floor(delta / DAY);
-  return getTranslationLang(translation['more'], { n: days }, days);
+  return getTranslationLang(translation['more'], { days: days }, days);
 };

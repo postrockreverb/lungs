@@ -2,41 +2,44 @@ import { ReactNode, useEffect, useState } from 'react';
 import { LangPack } from './types';
 import { GetLang, GetLangDate, LangsContext, LangsContextValue } from './LangsContext';
 import { getTranslationLang, getTranslationLangDate } from './helpers';
-import { LS_CACHE_KEY } from './constants';
+import { getCached, getCachedHash, saveCache } from './helpers/cache';
+
+let isLangPackSet = false;
 
 interface LangProviderProps {
   children: ReactNode;
-  langPack: LangPack | undefined | null;
-  localStorageCache?: boolean;
-  onNeedLoad?: () => void;
+  hash: string;
+  getLangPack: () => LangPack | null;
 }
 
-export const LangsProvider = ({ children, langPack: _langPack, localStorageCache = true, onNeedLoad }: LangProviderProps) => {
-  const [langPack, setLangPack] = useState<LangPack | undefined | null>(_langPack);
+export const LangsProvider = (props: LangProviderProps) => {
+  const { children, hash, getLangPack } = props;
+
+  const [langPack, setLangPack] = useState<LangPack | null>(null);
 
   useEffect(() => {
-    let hasLangPack = Boolean(_langPack || langPack);
-
-    if (_langPack && typeof _langPack === 'object') {
-      setLangPack(_langPack);
-      if (localStorageCache) {
-        localStorage.setItem(LS_CACHE_KEY, JSON.stringify(_langPack));
-      }
+    if (isLangPackSet) {
+      return;
     }
 
-    if (localStorageCache && !_langPack && !langPack && !!localStorage.getItem(LS_CACHE_KEY)) {
-      const json = localStorage.getItem(LS_CACHE_KEY) ?? '';
-      const langPackParsed = JSON.parse(json);
-      if (langPackParsed && typeof langPackParsed === 'object') {
-        setLangPack(langPackParsed);
-        hasLangPack = true;
-      }
+    const cachedHash = getCachedHash();
+
+    let langPack: LangPack | null;
+    if (hash === cachedHash) {
+      langPack = getLangPack();
+    } else {
+      langPack = getCached();
     }
 
-    if (!hasLangPack) {
-      onNeedLoad?.();
+    if (langPack) {
+      setLangPack(langPack);
+      isLangPackSet = true;
     }
-  }, [_langPack, langPack, localStorageCache]);
+
+    if (langPack && hash !== cachedHash) {
+      saveCache(langPack);
+    }
+  }, [langPack]);
 
   const getLang: GetLang = (key, vars, count): string => {
     const translation = langPack?.commons?.[key];
