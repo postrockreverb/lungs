@@ -1,64 +1,48 @@
-import { ReactNode, useEffect, useState } from 'react';
-import { LangPack } from './types';
+import { ReactNode, useCallback, useEffect, useReducer } from 'react';
 import { GetLang, GetLangDate, LangsContext, LangsContextValue } from './LangsContext';
 import { getTranslationLang, getTranslationLangDate } from './helpers';
-import { getCached, getCachedHash, saveCache } from './helpers/cache';
-
-let isLangPackSet = false;
+import { getLangPack } from './langPack';
+import { langPackUpdateEventName } from './event';
 
 interface LangProviderProps {
   children: ReactNode;
-  hash: string;
-  getLangPack: () => LangPack | null;
 }
 
-export const LangsProvider = (props: LangProviderProps) => {
-  const { children, hash, getLangPack } = props;
-
-  const [langPack, setLangPack] = useState<LangPack | null>(null);
+export const LangsProvider = ({ children }: LangProviderProps) => {
+  const [, update] = useReducer((x) => x + 1, 0);
+  const langPack = getLangPack();
 
   useEffect(() => {
-    if (isLangPackSet) {
-      return;
-    }
+    window.addEventListener(langPackUpdateEventName, update);
+    return () => {
+      window.removeEventListener(langPackUpdateEventName, update);
+    };
+  }, []);
 
-    const cachedHash = getCachedHash();
+  const getLang: GetLang = useCallback(
+    (key, vars, count): string => {
+      const translation = langPack?.commons?.[key];
+      return getTranslationLang(translation, vars, count);
+    },
+    [langPack?.commons],
+  );
 
-    let langPack: LangPack | null;
-    if (hash === cachedHash) {
-      langPack = getLangPack();
-    } else {
-      langPack = getCached();
-    }
+  const getLangDate: GetLangDate = useCallback(
+    (unixtime, dateLangKey, monthsLangKey, relativeFromDay, relativeLangKey): string => {
+      const dateLangKeyTranslation = langPack?.dates?.[dateLangKey];
+      const monthsLangKeyTranslation = langPack?.months?.[monthsLangKey];
+      const relativeDateLangKeyTranslation = relativeLangKey ? langPack?.relativeDates?.[relativeLangKey] : undefined;
 
-    if (langPack) {
-      setLangPack(langPack);
-      isLangPackSet = true;
-    }
-
-    if (langPack && hash !== cachedHash) {
-      saveCache(langPack);
-    }
-  }, [langPack]);
-
-  const getLang: GetLang = (key, vars, count): string => {
-    const translation = langPack?.commons?.[key];
-    return getTranslationLang(translation, vars, count);
-  };
-
-  const getLangDate: GetLangDate = (unixtime, dateLangKey, monthsLangKey, relativeFromDay, relativeLangKey): string => {
-    const dateLangKeyTranslation = langPack?.dates?.[dateLangKey];
-    const monthsLangKeyTranslation = langPack?.months?.[monthsLangKey];
-    const relativeDateLangKeyTranslation = relativeLangKey ? langPack?.relativeDates?.[relativeLangKey] : undefined;
-
-    return getTranslationLangDate(
-      unixtime,
-      dateLangKeyTranslation,
-      monthsLangKeyTranslation,
-      relativeFromDay,
-      relativeDateLangKeyTranslation,
-    );
-  };
+      return getTranslationLangDate(
+        unixtime,
+        dateLangKeyTranslation,
+        monthsLangKeyTranslation,
+        relativeFromDay,
+        relativeDateLangKeyTranslation,
+      );
+    },
+    [langPack?.dates, langPack?.months, langPack?.relativeDates],
+  );
 
   const value: LangsContextValue = {
     getLang,
