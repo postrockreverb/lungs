@@ -1,8 +1,8 @@
 import { ReactNode, useCallback, useEffect, useReducer } from 'react';
 import { GetLang, GetLangDate, LangsContext, LangsContextValue } from './LangsContext';
-import { getTranslationLang, getTranslationLangDate } from './helpers';
-import { getLangPack } from './langPack';
-import { langPackUpdateEventName } from './event';
+import { getTranslationLang, getTranslationLangDate } from '../helpers';
+import { getLangPack } from '../langPack';
+import { langPackUpdateEventName } from '../event';
 
 interface LangProviderProps {
   children: ReactNode;

@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { LangKey } from './types';
+import { LangKey } from '../types';
 
 export type GetLang = (key: LangKey, vars?: Record<string, string | number>, count?: number) => string;
 export type GetLangDate = (
