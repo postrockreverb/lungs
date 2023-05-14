@@ -2,28 +2,30 @@ import { LangPack } from './types';
 import { getCached, getCachedHash, saveCache } from './helpers';
 import { collectEvent } from './event';
 
+let targetHash: string | null = null;
 let langPack: LangPack | null = null;
 
+export const setTargetLangPackHash = (hash: string) => {
+  targetHash = hash;
+};
+
 export const getLangPack = () => langPack;
-export const getLangPackHash = () => langPack?.hash;
-export const getLangPackLoc = () => langPack?.lang;
 
 export const setLangPack = (newLangPack: LangPack | null) => {
   langPack = newLangPack;
+  if (newLangPack) {
+    saveCache(newLangPack);
+  }
   collectEvent();
 };
 
-export const initLangPack = () => {
-  const hash = getLangPackHash();
+export const initLangPack = (onNeedLoad?: () => void) => {
   const cachedHash = getCachedHash();
-
-  if (hash !== cachedHash) {
+  if (cachedHash === targetHash) {
+    const cachedLangPack = getCached();
+    setLangPack(cachedLangPack);
     return;
   }
-  const newLangPack = getCached();
 
-  if (newLangPack) {
-    setLangPack(newLangPack);
-    saveCache(newLangPack);
-  }
+  onNeedLoad?.();
 };

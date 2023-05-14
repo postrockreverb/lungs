@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useLangs } from './useLangs';
 import { LangKey } from '../types';
+import { getLangDate } from '../getLangs';
 
 interface UseDateParams {
   unixtime: number | undefined;
@@ -10,10 +10,9 @@ interface UseDateParams {
   relativeLangKey?: LangKey;
 }
 
-export const useDate = (props: UseDateParams) => {
+export const useClientDate = (props: UseDateParams) => {
   const { unixtime, dateLangKey, monthsLangKey, relativeFromDay, relativeLangKey } = props;
 
-  const { getLangDate } = useLangs();
   const [displayTime, setDisplayTime] = useState<string>('');
 
   useEffect(() => {
@@ -21,7 +20,7 @@ export const useDate = (props: UseDateParams) => {
       const time = getLangDate(unixtime, dateLangKey, monthsLangKey, relativeFromDay, relativeLangKey);
       setDisplayTime(time);
     }
-  }, [dateLangKey, getLangDate, monthsLangKey, relativeFromDay, relativeLangKey, unixtime]);
+  }, [dateLangKey, monthsLangKey, relativeFromDay, relativeLangKey, unixtime]);
 
   if (!unixtime) {
     return '';
