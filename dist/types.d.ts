@@ -12,6 +12,8 @@ declare const relativeDateKeys: readonly ["just", "seconds", "minute", "minutes"
 export type RelativeDateKey = (typeof relativeDateKeys)[number];
 export type RelativeDateLangKeyTranslation = Record<RelativeDateKey, LangKeyTranslation>;
 export type LangPack = {
+    lang: string;
+    hash: string;
     commons: {
         [P in LangKey]: LangKeyTranslation;
     };
@@ -25,8 +27,4 @@ export type LangPack = {
         [P in LangKey]: RelativeDateLangKeyTranslation;
     };
 };
-type DeepPartial<T> = T extends object ? {
-    [P in keyof T]?: DeepPartial<T[P]>;
-} : T;
-export type LangPackPartial = DeepPartial<LangPack>;
 export {};

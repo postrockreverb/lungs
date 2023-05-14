@@ -16,6 +16,8 @@ declare const relativeDateKeys: readonly ["just", "seconds", "minute", "minutes"
 type RelativeDateKey = (typeof relativeDateKeys)[number];
 type RelativeDateLangKeyTranslation = Record<RelativeDateKey, LangKeyTranslation>;
 type LangPack = {
+    lang: string;
+    hash: string;
     commons: {
         [P in LangKey]: LangKeyTranslation;
     };
@@ -29,10 +31,6 @@ type LangPack = {
         [P in LangKey]: RelativeDateLangKeyTranslation;
     };
 };
-type DeepPartial<T> = T extends object ? {
-    [P in keyof T]?: DeepPartial<T[P]>;
-} : T;
-type LangPackPartial = DeepPartial<LangPack>;
 
 interface UseDateParams {
     unixtime: number | undefined;
@@ -54,10 +52,9 @@ declare const useLangs: () => LangsContextValue;
 
 interface LangProviderProps {
     children: ReactNode;
-    langPack: LangPack | undefined | null;
-    localStorageCache?: boolean;
-    onNeedLoad?: () => void;
+    hash: string;
+    getLangPack: () => LangPack | null;
 }
-declare const LangsProvider: ({ children, langPack: _langPack, localStorageCache, onNeedLoad }: LangProviderProps) => react_jsx_runtime.JSX.Element;
+declare const LangsProvider: (props: LangProviderProps) => react_jsx_runtime.JSX.Element;
 
-export { DateLangKeyTranslation, Lang, LangKey, LangKeyTranslation, LangPack, LangPackPartial, LangsProvider, MonthKey, MonthLangKeyTranslation, NumericKey, NumericLangKeyTranslation, RelativeDateKey, RelativeDateLangKeyTranslation, monthKeys, useDate, useLangs };
+export { DateLangKeyTranslation, Lang, LangKey, LangKeyTranslation, LangPack, LangsProvider, MonthKey, MonthLangKeyTranslation, NumericKey, NumericLangKeyTranslation, RelativeDateKey, RelativeDateLangKeyTranslation, monthKeys, useDate, useLangs };
