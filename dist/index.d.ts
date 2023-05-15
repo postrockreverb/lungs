@@ -1,6 +1,3 @@
-import * as react_jsx_runtime from 'react/jsx-runtime';
-import { ReactNode } from 'react';
-
 type Lang = string;
 type LangKey = string;
 declare const numericKeys: readonly ["1", "2", "5"];
@@ -40,19 +37,17 @@ interface UseDateParams {
 }
 declare const useClientDate: (props: UseDateParams) => string;
 
-interface LangProviderProps {
-    children: ReactNode;
-    targetHash?: string;
-    onNeedLoad?: () => void;
+type GetLang = (key: LangKey, vars?: Record<string, string | number>, count?: number) => string;
+type GetLangDate = (unixtime: number, dateLangKey: LangKey, monthsLangKey: LangKey, relativeFromDay?: number, relativeLangKey?: LangKey) => string;
+interface LangsContextValue {
+    getLang: GetLang;
+    getLangDate: GetLangDate;
 }
-declare const LangsProvider: ({ children, targetHash, onNeedLoad }: LangProviderProps) => react_jsx_runtime.JSX.Element;
+declare const useLangs: () => LangsContextValue;
 
-declare const setTargetLangPackHash: (hash: string) => void;
-declare const getLangPack: () => LangPack | null;
 declare const setLangPack: (newLangPack: LangPack | null) => void;
-declare const initLangPack: (onNeedLoad?: () => void) => void;
 
 declare const getLang: (key: LangKey, vars?: Record<string, string | number>, count?: number) => string;
 declare const getLangDate: (unixtime: number, dateLangKey: LangKey, monthsLangKey: LangKey, relativeFromDay?: number, relativeLangKey?: LangKey) => string;
 
-export { DateLangKeyTranslation, Lang, LangKey, LangKeyTranslation, LangPack, LangsProvider, MonthKey, MonthLangKeyTranslation, NumericKey, NumericLangKeyTranslation, RelativeDateKey, RelativeDateLangKeyTranslation, getLang, getLangDate, getLangPack, initLangPack, monthKeys, setLangPack, setTargetLangPackHash, useClientDate };
+export { DateLangKeyTranslation, Lang, LangKey, LangKeyTranslation, LangPack, MonthKey, MonthLangKeyTranslation, NumericKey, NumericLangKeyTranslation, RelativeDateKey, RelativeDateLangKeyTranslation, getLang, getLangDate, monthKeys, setLangPack, useClientDate, useLangs };
