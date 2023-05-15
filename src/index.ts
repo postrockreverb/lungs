@@ -1,5 +1,5 @@
-export * from './hooks';
-export * from './LangsProvider';
 export * from './types';
-export * from './langPack';
-export * from './getLangs';
+export { useClientDate } from './hooks';
+export { useLangs } from './LangsProvider';
+export { setLangPack } from './langPack';
+export { getLang, getLangDate } from './getLangs';

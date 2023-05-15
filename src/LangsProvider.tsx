@@ -1,28 +1,47 @@
-import { ReactNode, useEffect, useReducer } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useReducer } from 'react';
 import { langPackUpdateEventName } from './event';
-import { initLangPack, setTargetLangPackHash } from './langPack';
+import { LangKey } from './types';
+import { getLang, getLangDate } from './getLangs';
+
+export type GetLang = (key: LangKey, vars?: Record<string, string | number>, count?: number) => string;
+export type GetLangDate = (
+  unixtime: number,
+  dateLangKey: LangKey,
+  monthsLangKey: LangKey,
+  relativeFromDay?: number,
+  relativeLangKey?: LangKey,
+) => string;
+
+interface LangsContextValue {
+  getLang: GetLang;
+  getLangDate: GetLangDate;
+}
+
+const LangsContext = createContext<LangsContextValue>({
+  getLang: () => '',
+  getLangDate: () => '',
+});
+
+export const useLangs = () => useContext(LangsContext);
 
 interface LangProviderProps {
   children: ReactNode;
-  targetHash?: string;
-  onNeedLoad?: () => void;
 }
 
-export const LangsProvider = ({ children, targetHash, onNeedLoad }: LangProviderProps) => {
+export const LangsProvider = ({ children }: LangProviderProps) => {
   const [, update] = useReducer((x) => x + 1, 0);
 
   useEffect(() => {
-    if (targetHash) {
-      setTargetLangPackHash(targetHash);
-    }
-
-    initLangPack(onNeedLoad);
-
     window.addEventListener(langPackUpdateEventName, update);
     return () => {
       window.removeEventListener(langPackUpdateEventName, update);
     };
   }, []);
 
-  return <>{children}</>;
+  const value: LangsContextValue = {
+    getLang,
+    getLangDate,
+  };
+
+  return <LangsContext.Provider value={value}>{children}</LangsContext.Provider>;
 };
