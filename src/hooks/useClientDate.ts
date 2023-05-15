@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { LangKey } from '../types';
-import { getLangDate } from '../getLangs';
+import { useLangs } from '../LangsProvider';
 
 interface UseDateParams {
   unixtime: number | undefined;
@@ -12,6 +12,7 @@ interface UseDateParams {
 
 export const useClientDate = (props: UseDateParams) => {
   const { unixtime, dateLangKey, monthsLangKey, relativeFromDay, relativeLangKey } = props;
+  const { getLangDate } = useLangs();
 
   const [displayTime, setDisplayTime] = useState<string>('');
 
