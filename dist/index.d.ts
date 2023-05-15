@@ -1,3 +1,6 @@
+import * as react_jsx_runtime from 'react/jsx-runtime';
+import { ReactNode } from 'react';
+
 type Lang = string;
 type LangKey = string;
 declare const numericKeys: readonly ["1", "2", "5"];
@@ -44,10 +47,14 @@ interface LangsContextValue {
     getLangDate: GetLangDate;
 }
 declare const useLangs: () => LangsContextValue;
+interface LangProviderProps {
+    children: ReactNode;
+}
+declare const LangsProvider: ({ children }: LangProviderProps) => react_jsx_runtime.JSX.Element;
 
 declare const setLangPack: (newLangPack: LangPack | null) => void;
 
 declare const getLang: (key: LangKey, vars?: Record<string, string | number>, count?: number) => string;
 declare const getLangDate: (unixtime: number, dateLangKey: LangKey, monthsLangKey: LangKey, relativeFromDay?: number, relativeLangKey?: LangKey) => string;
 
-export { DateLangKeyTranslation, Lang, LangKey, LangKeyTranslation, LangPack, MonthKey, MonthLangKeyTranslation, NumericKey, NumericLangKeyTranslation, RelativeDateKey, RelativeDateLangKeyTranslation, getLang, getLangDate, monthKeys, setLangPack, useClientDate, useLangs };
+export { DateLangKeyTranslation, Lang, LangKey, LangKeyTranslation, LangPack, LangsProvider, MonthKey, MonthLangKeyTranslation, NumericKey, NumericLangKeyTranslation, RelativeDateKey, RelativeDateLangKeyTranslation, getLang, getLangDate, monthKeys, setLangPack, useClientDate, useLangs };
